@@ -27,9 +27,10 @@ public class UrlMapping {
 
     public UrlMapping() {}
 
-    public UrlMapping(String originalUrl, String shortUrl) {
+    public UrlMapping(String originalUrl, String shortUrl, LocalDateTime expiresAt) {
         this.originalUrl = originalUrl;
         this.shortUrl = shortUrl;
+        this.expiresAt = expiresAt;
     }
 
     public Long getId() {
