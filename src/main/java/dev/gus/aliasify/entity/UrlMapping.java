@@ -20,18 +20,16 @@ public class UrlMapping {
     private String shortUrl;
 
     @Column(name = "expires_at", nullable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime expiresAt;
 
     @Column(name = "click_count", nullable = false)
-    private Long clickCount;
+    private Integer clickCount = 0;
 
     public UrlMapping() {}
 
-    public UrlMapping(String originalUrl, String shortUrl, LocalDateTime createdAt, Long clickCount) {
+    public UrlMapping(String originalUrl, String shortUrl) {
         this.originalUrl = originalUrl;
         this.shortUrl = shortUrl;
-        this.createdAt = createdAt;
-        this.clickCount = clickCount;
     }
 
     public Long getId() {
@@ -58,19 +56,19 @@ public class UrlMapping {
         this.shortUrl = shortUrl;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getExpiresAt() {
+        return expiresAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setExpiresAt(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
-    public Long getClickCount() {
+    public Integer getClickCount() {
         return clickCount;
     }
 
-    public void setClickCount(Long clickCount) {
+    public void setClickCount(Integer clickCount) {
         this.clickCount = clickCount;
     }
 }
