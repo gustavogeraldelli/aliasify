@@ -2,13 +2,13 @@ package dev.gus.aliasify.controller;
 
 import dev.gus.aliasify.dtos.OriginalUrlRequestDTO;
 import dev.gus.aliasify.dtos.ShortUrlResponseDTO;
+import dev.gus.aliasify.dtos.ShortUrlStatsResponseDTO;
 import dev.gus.aliasify.entity.UrlMapping;
 import dev.gus.aliasify.service.ShortenerService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 public class ShortenerController {
@@ -27,6 +27,18 @@ public class ShortenerController {
 
         UrlMapping urlMapping = service.shortenUrl(originalUrl);
         return ResponseEntity.ok(ShortUrlResponseDTO.from(urlMapping));
+    }
+
+    @GetMapping("/api/stats/{shortUrl}")
+    public ResponseEntity<ShortUrlStatsResponseDTO> stats(@PathVariable String shortUrl) {
+        if (shortUrl == null || shortUrl.isEmpty())
+            return ResponseEntity.badRequest().build();
+
+        Optional<UrlMapping> urlMapping = service.findByShortUrl(shortUrl);
+        if (urlMapping.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(ShortUrlStatsResponseDTO.from(urlMapping.get()));
     }
 
 }
