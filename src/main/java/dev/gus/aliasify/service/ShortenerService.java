@@ -32,15 +32,28 @@ public class ShortenerService {
         return repository.save(urlMapping);
     }
 
+    public Optional<UrlMapping> findByShortUrl(String shortUrl) {
+        return repository.findByShortUrl(shortUrl);
+    }
+
+    public Optional<UrlMapping> redirectToOriginalUrl(String shortUrl) {
+        Optional<UrlMapping> opt = repository.findByShortUrl(shortUrl);
+        if (opt.isEmpty())
+            return Optional.empty();
+
+        UrlMapping urlMapping = opt.get();
+        urlMapping.setClickCount(urlMapping.getClickCount() + 1);
+        
+        repository.save(urlMapping);
+
+        return Optional.of(urlMapping);
+    }
+
     private String generateShortUrl() {
         String shortUrl;
         do {
             shortUrl = RandomStringUtils.randomAlphanumeric(shortUrlLength);
         } while (repository.existsByShortUrl(shortUrl));
         return shortUrl;
-    }
-
-    public Optional<UrlMapping> findByShortUrl(String shortUrl) {
-        return repository.findByShortUrl(shortUrl);
     }
 }
