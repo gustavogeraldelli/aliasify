@@ -3,7 +3,6 @@ package dev.gus.aliasify.service;
 import dev.gus.aliasify.entity.UrlMapping;
 import dev.gus.aliasify.repository.UrlMappingRepository;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -39,5 +38,9 @@ public class ShortenerService {
             shortUrl = RandomStringUtils.randomAlphanumeric(shortUrlLength);
         } while (repository.existsByShortUrl(shortUrl));
         return shortUrl;
+    }
+
+    public Optional<UrlMapping> findByShortUrl(String shortUrl) {
+        return repository.findByShortUrl(shortUrl);
     }
 }
