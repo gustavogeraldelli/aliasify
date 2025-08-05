@@ -5,9 +5,14 @@ import dev.gus.aliasify.dtos.ShortUrlResponseDTO;
 import dev.gus.aliasify.dtos.ShortUrlStatsResponseDTO;
 import dev.gus.aliasify.entity.UrlMapping;
 import dev.gus.aliasify.service.ShortenerService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.Optional;
 
 @RestController
@@ -39,6 +44,16 @@ public class ShortenerController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(ShortUrlStatsResponseDTO.from(urlMapping.get()));
+    }
+
+    @GetMapping("/{shortUrl}")
+    public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable String shortUrl) throws IOException {
+        Optional<UrlMapping> urlMapping = service.redirectToOriginalUrl(shortUrl);
+        if (urlMapping.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.status(HttpStatus.FOUND)
+                .location(URI.create(urlMapping.get().getOriginalUrl())).build();
     }
 
 }
